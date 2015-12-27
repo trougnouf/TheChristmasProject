@@ -47,9 +47,9 @@ unsigned char flakePins[] = {8, 7, 12, 13, 4, 2, A0, A1, A2, A3, A4, A5};
 #define SMBOTPIN  3
 #define SMMIDPIN  5
 #define SMTOPPIN  6
-// sane values: GRAVITY = 200, SUNTIMER = 2000. testing values: 10, 50
-#define GRAVITY 200
-#define SUNTIMER 2000
+// sane values: gravity = 200, sunTimer = 2000. testing values: 10, 50
+unsigned char gravity = 200;
+unsigned int sunTimer = 2000;
 
 
 /*
@@ -173,15 +173,16 @@ void snow()
   // falling left
   if(millis() >= timeToFallL)
   {
+    gravity=((gravity==254)||(gravity==1))?200:gravity+random(-1,2);
     //wdt_reset();
-    timeToFallL = millis() + GRAVITY;
+    timeToFallL = millis() + gravity;
     if(activeFlakeLeft <= 5)
     {
       digitalWrite(flakePins[activeFlakeLeft], LOW);
       activeFlakeLeft++;
       if(activeFlakeLeft == 6)
       {
-        timeToFallL += random(0, GRAVITY*10);
+        timeToFallL += random(0, gravity*10);
         enlargeSnowman();
         wdt_reset();
       }
@@ -191,8 +192,9 @@ void snow()
   // falling right
   if(millis() >= timeToFallR)
   {
+    gravity=((gravity==254)||(gravity==1))?200:gravity+random(-1,2);
     //wdt_reset();
-    timeToFallR = millis() + GRAVITY;
+    timeToFallR = millis() + gravity;
     if(activeFlakeRight <= 11)
     {
       digitalWrite(flakePins[activeFlakeRight], LOW);
@@ -200,7 +202,7 @@ void snow()
       if(activeFlakeRight == 12)
       {
         enlargeSnowman();
-        timeToFallR += random(0, GRAVITY*3);
+        timeToFallR += random(0, gravity*3);
         wdt_reset();
       }
     }
@@ -239,7 +241,8 @@ void riseSun()
     Serial.print("\nSwitching to SUNSET\n");
   }
   wdt_reset();
-  delay(SUNTIMER);
+  sunTimer=((sunTimer==60000)||(sunTimer==1))?2000:sunTimer+random(-1,2);
+  delay(sunTimer);
 }
 
 void setSun()
@@ -260,8 +263,8 @@ void setSun()
     //errorOut();
   }
   
-  
-  delay(SUNTIMER);
+  sunTimer=((sunTimer==60000)||(sunTimer==1))?2000:sunTimer+random(-1,2);
+  delay(sunTimer);
 }
 
 void enlargeSnowman()
@@ -286,13 +289,13 @@ void shrinkSnowman()
 
 void updateSky()
 {
-  char randomChange = random(-10,11); // sane: -4, 5. debug: -50, 50
+  char randomChange = random(-4,5); // sane: -4, 5. debug: -50, 50
   if((skyIntensity + randomChange) < GBWMAXDC && (skyIntensity + randomChange) > 0)
   {
     skyIntensity += randomChange;
     analogWrite(SKYPIN, skyIntensity);
   }
-  timeToUpdateSky = millis() + 50;
+  timeToUpdateSky = millis() + random(5,100);
 }
 
 void errorOut()
