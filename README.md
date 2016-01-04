@@ -9,3 +9,6 @@ Releases:         Major breakthroughs
 
 resources:        Bootloader, images from Wikipedia, ArduinoISP instructions
 
+Doc:              nothing to see here
+
+LICENSE:          GPLv3
