@@ -11,4 +11,4 @@ resources:        Bootloader, images from Wikipedia, ArduinoISP instructions
 
 Doc:              nothing to see here
 
-LICENSE:          GPLv3
+License:          GPLv3
